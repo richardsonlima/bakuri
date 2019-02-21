@@ -6,9 +6,6 @@ import (
 
     "github.com/chzyer/readline"
     "k8s.io/client-go/kubernetes"
-    //"k8s.io/client-go/pkg/api/v1"
-    //"github.com/kubernetes/api/core/v1"
-    //"k8s.io/api/core/v1"
     metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/client-go/tools/clientcmd"
 )
@@ -26,7 +23,7 @@ func main() {
         panic(err.Error())
     }
 
-    rl, err := readline.New("k8s> ")
+    rl, err := readline.New("bakuri> ")
     if err != nil {
         panic(err)
     }
@@ -37,8 +34,8 @@ func main() {
         if err != nil || line == "exit" {
             break
         }
-        if line == "ps" {
-            pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{}) //./k8s-conn.go:40:59: undefined: "k8s.io/api/core/v1".ListOptions
+        if line == "listpods" {
+            pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{}) // https://godoc.org/k8s.io/apimachinery/pkg/apis/meta/v1
             if err != nil {
                 panic(err.Error())
             }
