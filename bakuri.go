@@ -8,7 +8,8 @@ import (
     "k8s.io/client-go/kubernetes"
     //"k8s.io/client-go/pkg/api/v1"
     //"github.com/kubernetes/api/core/v1"
-    "k8s.io/api/core/v1"
+    //"k8s.io/api/core/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/client-go/tools/clientcmd"
 )
 
@@ -37,7 +38,7 @@ func main() {
             break
         }
         if line == "ps" {
-            pods, err := clientset.CoreV1().Pods("").List(v1.ListOptions{}) //./k8s-conn.go:40:59: undefined: "k8s.io/api/core/v1".ListOptions
+            pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{}) //./k8s-conn.go:40:59: undefined: "k8s.io/api/core/v1".ListOptions
             if err != nil {
                 panic(err.Error())
             }
