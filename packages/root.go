@@ -4,6 +4,13 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"os"
+    "flag"
+	"github.com/chzyer/readline"
+    "k8s.io/client-go/kubernetes"
+    "k8s.io/client-go/tools/clientcmd"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+    "github.com/richardsonlima/bakuri/packages"
 )
 
 var Verbose bool
