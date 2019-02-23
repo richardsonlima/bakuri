@@ -24,14 +24,19 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// listservicesCmd represents the listservices command
-var listservicesCmd = &cobra.Command{
-	Use:   "listservices",
-	Short: "Listing k8s services",
-	Long: `Description: xxx`,
+// listconfigmapsCmd represents the listconfigmaps command
+var listconfigmapsCmd = &cobra.Command{
+	Use:   "listconfigmaps",
+	Short: "Listing k8s configmaps",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := color.New(color.FgCyan).Add(color.Underline)
-		c.Println("[+] Listing Services on kube-system namespace: ")
+    c.Println("[+] Listing ConfigMaps on kube-system namespace: ")
 
 		kubeconfig := os.Getenv("HOME") + "/.kube/config"
 		  // uses the current context in kubeconfig
@@ -44,28 +49,29 @@ var listservicesCmd = &cobra.Command{
 			if err != nil {
 				panic(err.Error())
 			}
-			// List all service on namespace
+			// List all pod on namespace
 			namespace := "kube-system"
-			services, err := clientset.CoreV1().Services(namespace).List(metav1.ListOptions{})
+			configmaps, err := clientset.CoreV1().ConfigMaps(namespace).List(metav1.ListOptions{})
 			if err != nil {
 	            panic(err.Error())
 			}
-	        for _, service := range services.Items{
-	            fmt.Printf("   Service: %s\n", service.GetName())
+	        for _, configmap := range configmaps.Items{
+							fmt.Printf("   ConfigMap: %s\n", configmap.GetName())
+
 	        }
 		},
 	}
 
 func init() {
-	rootCmd.AddCommand(listservicesCmd)
+	rootCmd.AddCommand(listconfigmapsCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// listservicesCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// listconfigmapsCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// listservicesCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// listconfigmapsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

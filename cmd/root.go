@@ -29,9 +29,7 @@ var cfgFile string
 var rootCmd = &cobra.Command{
 	Use:   "bakuri",
 	Short: "Bakuri is a command-line tool for interacting with a Kubernetes cluster",
-	Long: `Bakuri is a CLI tool that handles locating and authenticating to the Kubernetes API server.
-To access a k8s cluster, you need don't need to know the location of the cluster 
-credentials to access it because bakuri can do that for you.`,
+	Long: `Bakuri is a command-line tool for interacting with a Kubernetes cluster`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
