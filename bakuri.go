@@ -1,50 +1,21 @@
+// Copyright © 2019 NAME HERE <EMAIL ADDRESS>
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
-import (
-    "flag"
-    "fmt"
-
-    "github.com/chzyer/readline"
-    "k8s.io/client-go/kubernetes"
-    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-    "k8s.io/client-go/tools/clientcmd"
-)
+import "bakuri/cmd"
 
 func main() {
-    kubeconfig := flag.String("kubeconfig", "/home/richardson/.kube/config", "this is the absolute path to the kubeconfig file")
-    flag.Parse()
-    config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
-    if err != nil {
-        panic(err.Error())
-    }
-
-    clientset, err := kubernetes.NewForConfig(config)
-    if err != nil {
-        panic(err.Error())
-    }
-
-    rl, err := readline.New("bakuri> ")
-    if err != nil {
-        panic(err)
-    }
-    defer rl.Close()
-
-    for {
-        line, err := rl.Readline()
-        if err != nil || line == "exit" {
-            break
-        }
-        if line == "listpods" {
-            pods, err := clientset.CoreV1().Pods("").List(metav1.ListOptions{}) // https://godoc.org/k8s.io/apimachinery/pkg/apis/meta/v1
-            if err != nil {
-                panic(err.Error())
-            }
-            for _, pod := range pods.Items{
-                fmt.Printf("%s %s\n", pod.GetName(), pod.GetCreationTimestamp())
-            }
-
-        } else {
-            fmt.Printf("unknown command\n")
-        }
-    }
+	cmd.Execute()
 }
