@@ -16,8 +16,12 @@ package cmd
 
 import (
 	"fmt"
-
+	"os"
 	"github.com/spf13/cobra"
+	"github.com/fatih/color"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/tools/clientcmd"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // listservicesCmd represents the listservices command
@@ -26,9 +30,31 @@ var listservicesCmd = &cobra.Command{
 	Short: "Listing k8s services",
 	Long: `Description: xxx`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("listservices called")
-	},
-}
+		c := color.New(color.FgCyan).Add(color.Underline)
+		c.Println("[+] Listing Services on kube-system namespace: ")
+
+		kubeconfig := os.Getenv("HOME") + "/.kube/config"
+		  // uses the current context in kubeconfig
+			config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+			if err != nil {
+				panic(err.Error())
+			}
+		  // creates the clientset
+			clientset, err := kubernetes.NewForConfig(config)
+			if err != nil {
+				panic(err.Error())
+			}
+			// List all service on namespace
+			namespace := "kube-system"
+			services, err := clientset.CoreV1().Services(namespace).List(metav1.ListOptions{})
+			if err != nil {
+	            panic(err.Error())
+			}
+	        for _, service := range services.Items{
+	            fmt.Printf("   Service: %s\n", service.GetName())
+	        }
+		},
+	}
 
 func init() {
 	rootCmd.AddCommand(listservicesCmd)

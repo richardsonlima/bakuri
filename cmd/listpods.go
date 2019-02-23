@@ -17,8 +17,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"github.com/spf13/cobra"
+	"github.com/fatih/color"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -28,32 +28,35 @@ import (
 var listpodsCmd = &cobra.Command{
 	Use:   "listpods",
 	Short: "Listing k8s pods",
-	Long: `A Pod always runs on a Node. A Node is a worker machine in Kubernetes 
-	A Pod is a Kubernetes abstraction that represents a group of one or more application containers 
+	Long: `A Pod always runs on a Node. A Node is a worker machine in Kubernetes
+	A Pod is a Kubernetes abstraction that represents a group of one or more application containers
 	(such as Docker or rkt), and some shared resources for those containers.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("[+] Listing PODs on kube-system namespace: ")
-	
+		c := color.New(color.FgCyan).Add(color.Underline)
+		c.Println("[+] Listing PODs on kube-system namespace: ")
+
 	kubeconfig := os.Getenv("HOME") + "/.kube/config"
-	// uses the current context in kubeconfig
+	  // uses the current context in kubeconfig
 		config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 		if err != nil {
 			panic(err.Error())
 		}
-	// creates the clientset
+	  // creates the clientset
 		clientset, err := kubernetes.NewForConfig(config)
 		if err != nil {
 			panic(err.Error())
 		}
-		// List all pod on iot namespace
-		//clientset.Core().Pods("kube-system").List(metav1.ListOptions{})		
-		pods, err := clientset.CoreV1().Pods("kube-system").List(metav1.ListOptions{})	
+		// List all pod on namespace
+		//clientset.Core().Pods("kube-system").List(metav1.ListOptions{})
+		namespace := "kube-system"
+		pods, err := clientset.CoreV1().Pods(namespace).List(metav1.ListOptions{})
 		if err != nil {
             panic(err.Error())
 		}
         for _, pod := range pods.Items{
-            fmt.Printf("%s %s\n", pod.GetName(), pod.GetCreationTimestamp())
-        }		
+						fmt.Printf("   Pod: %s\n", pod.GetName())
+
+        }
 	},
 }
 
